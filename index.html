@@ -1,0 +1,2346 @@
+<!DOCTYPE html>
+<!--The HTML, CSS, and JS is not offical. Source: http://2048game.com/ -->
+
+<style>
+	@import url(fonts/clear-sans.css);
+	html,
+	body {
+		margin: 0;
+		padding: 0;
+		background: #faf8ef;
+		color: #776e65;
+		font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+		font-size: 13px;
+	}
+
+	body {
+		margin: 80px 0;
+	}
+
+	.heading:after {
+		content: "";
+		display: block;
+		clear: both;
+	}
+
+	@-webkit-keyframes move-up {
+		0% {
+			top: 25px;
+			opacity: 1;
+		}
+
+		100% {
+			top: -50px;
+			opacity: 0;
+		}
+	}
+
+	@-moz-keyframes move-up {
+		0% {
+			top: 25px;
+			opacity: 1;
+		}
+
+		100% {
+			top: -50px;
+			opacity: 0;
+		}
+	}
+
+	@keyframes move-up {
+		0% {
+			top: 25px;
+			opacity: 1;
+		}
+
+		100% {
+			top: -50px;
+			opacity: 0;
+		}
+	}
+
+	.scores-container {
+		margin-top: 90px;
+	}
+
+	.score-container,
+	.best-container {
+		position: relative;
+		display: inline-block;
+		background: #bbada0;
+		padding: 15px 25px;
+		font-size: 30px;
+		height: 30px;
+		line-height: 40px;
+		font-weight: bold;
+		border-radius: 3px;
+		color: white;
+		margin-top: 8px;
+		text-align: center;
+	}
+
+	.score-container:after,
+	.best-container:after {
+		position: absolute;
+		width: 100%;
+		top: 5px;
+		left: 0;
+		text-transform: uppercase;
+		font-size: 10px;
+		line-height: 19px;
+		text-align: center;
+		color: #eee4da;
+	}
+
+	.score-container .score-addition,
+	.best-container .score-addition {
+		position: absolute;
+		right: 30px;
+		color: red;
+		font-size: 25px;
+		line-height: 25px;
+		font-weight: bold;
+		color: rgba(119, 110, 101, 0.9);
+		z-index: 100;
+		-webkit-animation: move-up 600ms ease-in;
+		-moz-animation: move-up 600ms ease-in;
+		animation: move-up 600ms ease-in;
+		-webkit-animation-fill-mode: both;
+		-moz-animation-fill-mode: both;
+		animation-fill-mode: both;
+	}
+
+	.score-container:after {
+		content: "humala";
+	}
+
+	.best-container:after {
+		content: "kovin humala";
+	}
+
+	p {
+		margin-top: 0;
+		margin-bottom: 10px;
+		line-height: 1.65;
+	}
+
+	a {
+		color: #776e65;
+		font-weight: bold;
+		text-decoration: underline;
+		cursor: pointer;
+	}
+
+	strong.important {
+		text-transform: uppercase;
+	}
+
+	hr {
+		border: none;
+		border-bottom: 1px solid #d8d4d0;
+		margin-top: 20px;
+		margin-bottom: 30px;
+	}
+
+	.container {
+		width: 900px;
+		margin: 0 auto;
+	}
+
+	@-webkit-keyframes fade-in {
+		0% {
+			opacity: 0;
+		}
+
+		100% {
+			opacity: 1;
+		}
+	}
+
+	@-moz-keyframes fade-in {
+		0% {
+			opacity: 0;
+		}
+
+		100% {
+			opacity: 1;
+		}
+	}
+
+	@keyframes fade-in {
+		0% {
+			opacity: 0;
+		}
+
+		100% {
+			opacity: 1;
+		}
+	}
+
+	.game-container {
+		position: relative;
+		padding: 15px;
+		cursor: default;
+		-webkit-touch-callout: none;
+		-ms-touch-callout: none;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		-ms-touch-action: none;
+		touch-action: none;
+		background: #bbada0;
+		border-radius: 6px;
+		width: 500px;
+		height: 500px;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+	.game-container .game-message {
+		display: none;
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background: rgba(238, 228, 218, 0.5);
+		z-index: 100;
+		text-align: center;
+		-webkit-animation: fade-in 800ms ease 1200ms;
+		-moz-animation: fade-in 800ms ease 1200ms;
+		animation: fade-in 800ms ease 1200ms;
+		-webkit-animation-fill-mode: both;
+		-moz-animation-fill-mode: both;
+		animation-fill-mode: both;
+	}
+
+	.game-container .game-message p {
+		font-size: 60px;
+		font-weight: bold;
+		height: 60px;
+		line-height: 60px;
+		margin-top: 222px;
+	}
+
+	.game-container .game-message .lower {
+		display: block;
+		margin-top: 59px;
+	}
+
+	.game-container .game-message a {
+		display: inline-block;
+		background: #8f7a66;
+		border-radius: 3px;
+		padding: 0 20px;
+		text-decoration: none;
+		color: #f9f6f2;
+		height: 40px;
+		line-height: 42px;
+		margin-left: 9px;
+	}
+
+	.game-container .game-message a.keep-playing-button {
+		display: none;
+	}
+
+	.game-container .game-message.game-won {
+		background: rgba(237, 194, 46, 0.5);
+		color: #f9f6f2;
+	}
+
+	.game-container .game-message.game-won a.keep-playing-button {
+		display: inline-block;
+	}
+
+	.game-container .game-message.game-won,
+	.game-container .game-message.game-over {
+		display: block;
+	}
+
+	.grid-container {
+		position: absolute;
+		z-index: 1;
+	}
+
+	.grid-row {
+		margin-bottom: 15px;
+	}
+
+	.grid-row:last-child {
+		margin-bottom: 0;
+	}
+
+	.grid-row:after {
+		content: "";
+		display: block;
+		clear: both;
+	}
+
+	.grid-cell {
+		width: 106.25px;
+		height: 106.25px;
+		margin-right: 15px;
+		float: left;
+		border-radius: 3px;
+		background: rgba(238, 228, 218, 0.35);
+	}
+
+	.grid-cell:last-child {
+		margin-right: 0;
+	}
+
+	.tile-container {
+		position: absolute;
+		z-index: 2;
+	}
+
+	.tile,
+	.tile .tile-inner {
+		width: 107px;
+		height: 107px;
+		line-height: 116.25px;
+	}
+
+	.tile.tile-position-1-1 {
+		-webkit-transform: translate(0px, 0px);
+		-moz-transform: translate(0px, 0px);
+		transform: translate(0px, 0px);
+	}
+
+	.tile.tile-position-1-2 {
+		-webkit-transform: translate(0px, 121px);
+		-moz-transform: translate(0px, 121px);
+		transform: translate(0px, 121px);
+	}
+
+	.tile.tile-position-1-3 {
+		-webkit-transform: translate(0px, 242px);
+		-moz-transform: translate(0px, 242px);
+		transform: translate(0px, 242px);
+	}
+
+	.tile.tile-position-1-4 {
+		-webkit-transform: translate(0px, 363px);
+		-moz-transform: translate(0px, 363px);
+		transform: translate(0px, 363px);
+	}
+
+	.tile.tile-position-2-1 {
+		-webkit-transform: translate(121px, 0px);
+		-moz-transform: translate(121px, 0px);
+		transform: translate(121px, 0px);
+	}
+
+	.tile.tile-position-2-2 {
+		-webkit-transform: translate(121px, 121px);
+		-moz-transform: translate(121px, 121px);
+		transform: translate(121px, 121px);
+	}
+
+	.tile.tile-position-2-3 {
+		-webkit-transform: translate(121px, 242px);
+		-moz-transform: translate(121px, 242px);
+		transform: translate(121px, 242px);
+	}
+
+	.tile.tile-position-2-4 {
+		-webkit-transform: translate(121px, 363px);
+		-moz-transform: translate(121px, 363px);
+		transform: translate(121px, 363px);
+	}
+
+	.tile.tile-position-3-1 {
+		-webkit-transform: translate(242px, 0px);
+		-moz-transform: translate(242px, 0px);
+		transform: translate(242px, 0px);
+	}
+
+	.tile.tile-position-3-2 {
+		-webkit-transform: translate(242px, 121px);
+		-moz-transform: translate(242px, 121px);
+		transform: translate(242px, 121px);
+	}
+
+	.tile.tile-position-3-3 {
+		-webkit-transform: translate(242px, 242px);
+		-moz-transform: translate(242px, 242px);
+		transform: translate(242px, 242px);
+	}
+
+	.tile.tile-position-3-4 {
+		-webkit-transform: translate(242px, 363px);
+		-moz-transform: translate(242px, 363px);
+		transform: translate(242px, 363px);
+	}
+
+	.tile.tile-position-4-1 {
+		-webkit-transform: translate(363px, 0px);
+		-moz-transform: translate(363px, 0px);
+		transform: translate(363px, 0px);
+	}
+
+	.tile.tile-position-4-2 {
+		-webkit-transform: translate(363px, 121px);
+		-moz-transform: translate(363px, 121px);
+		transform: translate(363px, 121px);
+	}
+
+	.tile.tile-position-4-3 {
+		-webkit-transform: translate(363px, 242px);
+		-moz-transform: translate(363px, 242px);
+		transform: translate(363px, 242px);
+	}
+
+	.tile.tile-position-4-4 {
+		-webkit-transform: translate(363px, 363px);
+		-moz-transform: translate(363px, 363px);
+		transform: translate(363px, 363px);
+	}
+
+	.tile {
+		position: absolute;
+		-webkit-transition: 100ms ease-in-out;
+		-moz-transition: 100ms ease-in-out;
+		transition: 100ms ease-in-out;
+		-webkit-transition-property: -webkit-transform;
+		-moz-transition-property: -moz-transform;
+		transition-property: transform;
+	}
+
+	.tile .tile-inner {
+		border-radius: 3px;
+		background: #eee4da;
+		text-align: center;
+		font-weight: bold;
+		z-index: 10;
+		font-size: 55px;
+	}
+
+	.tile.tile-2 .tile-inner {
+    background: url('https://i0.wp.com/ravintolabigbang.fi/wp-content/uploads/2018/10/muumi.jpg?fit=1181%2C1181&ssl=1');
+        border-radius: 3px;
+        color: transparent;
+		box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+        background-size: 100% 100%;
+
+
+	}
+
+	.tile.tile-4 .tile-inner {
+	  background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxK9vbqsEO94730lGWFarjfn3-hmJTESvFrQ&usqp=CAU');
+        border-radius: 3px;
+        color: transparent;
+		box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+        background-size: 100% 100%;
+
+
+	}
+
+	.tile.tile-8 .tile-inner {
+  background: url('https://public.keskofiles.com/f/k-ruoka/product/6415600503068?w=480&h=480&fit=max&auto=format&fm=jpg&cs=srgb');
+        border-radius: 3px;
+        color: transparent;
+		box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+        background-size: 100% 100%;
+
+
+	}
+
+	.tile.tile-16 .tile-inner {
+  background: url('data:image/jpeg;base64,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');
+        border-radius: 3px;
+        color: transparent;
+		box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+        background-size: 100% 100%;
+
+
+	}
+
+	.tile.tile-32 .tile-inner {
+  background: url('https://cdn.shopify.com/s/files/1/0458/2359/0560/products/image_2a63b4f8-18e5-40c5-b3b7-25f16d2389f5_600x600.jpg?v=1618925375');
+        border-radius: 3px;
+        color: transparent;
+		box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+        background-size: 100% 100%;
+
+
+	}
+
+	.tile.tile-64 .tile-inner {
+  background: url('data:image/jpeg;base64,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');
+        border-radius: 3px;
+        color: transparent;
+		box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+        background-size: 100% 100%;
+
+
+	}
+
+	.tile.tile-128 .tile-inner {
+  background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbWna18z-J4XO1sSsO0nAK5HkiVDf5UrS-nJLqSaHc69CC8dbrdIh-7EEJILVBmjlCifg&usqp=CAU');
+        border-radius: 3px;
+        color: transparent;
+		box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+        background-size: 100% 100%;
+
+
+	}
+
+	@media screen and (max-width: 520px) {
+		.tile.tile-128 .tile-inner {
+			font-size: 25px;
+		}
+	}
+
+	.tile.tile-256 .tile-inner {
+  background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxK9vbqsEO94730lGWFarjfn3-hmJTESvFrQ&usqp=CAU');
+        border-radius: 3px;
+        color: transparent;
+		box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+        background-size: 100% 100%;
+
+
+	}
+
+	@media screen and (max-width: 520px) {
+		.tile.tile-256 .tile-inner {
+			font-size: 25px;
+		}
+	}
+
+	.tile.tile-512 .tile-inner {
+  background: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMREhUSExAWFRUWFRUVFhUVFxUVFRUWFRUWFhgWFxUYHSogGBomGxgYITEhJSktLi4uFx8zODMvNygtLisBCgoKDg0OGxAQGy0mICUtLS0tLy8tLS0tLy0vLS0tLS4tLS0tKy0rLy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIAMsA+AMBIgACEQEDEQH/xAAcAAABBQEBAQAAAAAAAAAAAAAAAgMEBQYHAQj/xABFEAACAQMCAgYGCAQDCAIDAAABAgMABBESIQUxBiJBUWFxBxMygZGhFEJScpKxwdEjM2LwgqLhFUNjc6OywvGT0hZTZP/EABsBAAIDAQEBAAAAAAAAAAAAAAQFAAMGAgEH/8QAPxEAAQMCAwUFBQYEBQUAAAAAAQIDEQAEEiExBUFRcYFhkaGxwRMiMtHwBhQjQlLhQ2Jy8RWCkrLiFiQzotL/2gAMAwEAAhEDEQA/AO40UUVKlFFFFSpRRRRUqUUUUV7hNSiio017GntyovmwB+FU110rhXZAzn8K/E7/ACod66ZZ/wDIoDz7tfCr2rZ134Ek+XfpWiorC3XSudvZ0oPAZPxbb5VBl4hcN7UzgHtZ/VqfiQKXHbTJMNpUo9g+j4UejZDpErIHj+3jXSKQzgcyB765hrVudwmfvFvyBr0xL9o+5f3NUr20pP8ACjmsA90ZVcNjSJxnokn1rpX0lBzkX8QptuIQjnPGP8a/vXL57qGP27hE8HIX9acg0yDMUnrQe2JJpR8Y0Nep2ndODEhmR2GfIV4dlsI+Nw90eZrcXvSiBPZy58BgfiP6Zqku+lczewFQeA1H4tt8qp5eD3T7RxOD9phGBjykYMPw1UIzazA7SNOvtLDplYfeEZYL78fnXChtR8ExhHAa9SJI5yB1oV25srReENqc7RBHLWJ6VfPxac8539zED4Dao73Ttzdj5kmot9byRYHq5QccwhYHvJDjb8VItJ9fPTkHkGVtvEKTv76VXTFyynE4okcZV60ysNos3SihttSY4py7xI6GOypWs9/zpxLyReUjDyYj9aZooEOr3KPfTQoHCp8PGbheUz+86v8AuzVladLZV9tVcfhb4jb5VnqKIbvrhv4XFd8+BkVSu1ZX8SB3R4iDW/4fx+GXbVob7L7fBuR/OrmuT1LteJSxexKyjuzkfhO1N7fbpGTyZ7R8j8xSx7Y6Tm2qOw/P9jXTaKwkPSudeehvvLg/5SKnQ9MT9aD3q36EfrTBG2LRWpI5g+k0EvZdwnQA8iPWK1tFUMPSm3bmXXzXI/y5q0tr6OX2JFbwBGR5jmKNauWXckLB5EUI5butfGkjpl31Koooq+qaKgcQ4nFAOu+55KN2Pu/U1PrmPEZjLK75zl2+GcD5YpbtO9VatgpEkmM93zo6wtBcKOI5CtDddMP/ANcQ83P/AIj96rZ+lFw3Jgv3VX/yyapsUVmnNp3TmqyOWXln41oEWNujRA65+dTm4zOec7+5iv5U23Epjzmc+bsf1qLRQxuHTqtXefnV4aQNAO4U6bpzzdvxGmyxPM5ryiqlEq1zqwZaUZpi4uAox6xEY7LrO2ezbIJ8hT9Nywq+NSg43GRuD3g9hqxj2aVjHMdkT45d9cuYiMte2fSq9uD3swBRnkJz1fVPDGB2byKqMD941nukHCbmyGqaIKpx1keE8zjdQdXyrc219PF/LuZMb9SU+uQ+ZfrgeAYV6Z7d39bc8Lt5n7ZI1TWx72jl2PmXJrW2l1sxUJVkOBJT5FKB0nWshf7GcfVicSVf5lK7gSY6Csxw/oXd3MfrYZbWVTyxPr9x0xbHw1VFtOi92jt9JtJRGDpJsI7ec9xyNRYeWM+FXHSS3Jf6TZ30kEi7CIWLI2w2Qy28PWTwYMPGjg3S7iBRxNwoySsun18JFvM2OWolT8Rt4U8YYYbR+HgM7icxyxHxE0ub2a2yqUtkHkatejlrYW50W/Ep7Zyf5VwEiJPbhJ4wD/hrUX8McakyxSvkbzW0ciuwPebZtZ88AVz3hC8X3Ml3Isef5cyfSSQTyy8W5Hacb9nhMHCJ01OHunJz/Dtljs0Od9/V+rzvtkjPPfv5ffaBJxyes95Ce7Mc67SozhQhR5JMjpSn4pZRSMLbjt1bSdsdyk0sYPPdJkBH4qYvOmwEkccyWXECzYR7b1kU6DHtEupVD91xUO54XcltacEJcjGu4kSRj5nVk+81nrvoNeynJt7aHfOFkRMeGNf6Vcy8wojGQBuJW2TP+UhUdmKe+u0IuVKzaVHUHuP7xXR7i+vMoYbUqqkFfp0iTqORyhQPIGxyPrfdUO74PPLI30jiBw4VvVLGpjQMAeo9wzkfLwrOdHujV5b+1xQxLt1INUuB3YfSg8xmte162lQWLFRjXII2dvPSgUDwA+NINobSNufwbhCt3uJJMb5KsQk5HJWWcTnTq2sUuQVtqHaqB4a+FO8M4VFCojbJ2A1kuZPNs7H+/Knbvh6oxUnGNu8VGXiEmMBgvbsqjfv2FRZCW3ZifMn8htWVuXA6ZkzMydeuZxGc5yPORDdDTgOsDh8soHT+7Us2mX1ezbZyu+PBh2U9XiqBsAB5bUAZqg0SkEDOvaKdSDPbU+z4UH+tio2kuKwpzNcreQgSTVXRV1JwUL9c1DltVXx99duMrbEqFcJuEK+GoNeoTkEZyORHMeRqRhe4UFqox13j7K2fRe+eWMiQ5ZCBntII2z48968qo6G3QWV4z9dQR5pnb4En3UVudmOKetkqJkjI9D8orLX7YafIAgGCOo+c1pOM3ohheTtAwv3jsvzrnFipyBWq6fOdES9hdifMDb8zWb4eu+aTbYcx3KWzoPXM+lOdlthFqV71HyyHr31dC3yOsgbzG/x51DurNByGnyOR86t7efbBpriWnTUdYQpEiPrt1rhtxQXFZtl8aRSJ5KWhyM0hgxnTaIGdFFFFSvaKKKKlSiiiipUoooorzCOFeyaAaK9Cnur0AedSBXhVSa9CE9hqTG1azhGnSMj5CibS2+8KImIoS4uiymYnr+1Y0W7fYb4GlfRX+wfft+dbq4kQDkPlVNezLRjmz0tiSqh2r9ThyTWdNu3h8a89Qe+pMz5NMsaUlUHWj0lRpsxgeNeFqejtnb2UZvIE/lUdxXWE6nfXQzp6NqsbG70iqmM1ZcPtTJyIHnVtvjDowa1Q+E4fe0p+5viagySE1Z3PCdAy0qAeefh31TTXMSn+Yp8QGq+5auDmsZdPnS5e0rC3IS46lJ4Ewe7WvTXjUhJlYZRs+O+KGagYIOdMmXUOoC2yCk6EGQeRGVLtZzHIjrzVgfPfce8be+iixXVNGO+RB8WArynWzw77M4FQJ9BXjzbSiMYz/c1qun6/wY27pQPijH9KyljeFOzI7iP1rY9OY82ufsyIfidP/lWHiiOM4q7a4cFziRMwNOtD7MwqtAFcSPI+tXsXF0+tGR5HPyNNcRvEZeq3uOxqqIpqSlv3xwgpMeR8KKTaoCpE01K1SLU1CRskip9mNxVJTomi3ICauobVGXrKQe//AENQ5rZQdifyq7tnXRvVNesNW1FXjCUNgpiaVMrUVkZ0z9GH2qUloD9fHuJ/KkBqdilwaWoJBz0+uEedFKKo1qXHwLIzrPujc1HueGhObMfNdP61cW3F9IxVZxC81mmTzdulvEk59fnQra3yuFadPQCoPq1FJJA5CvTTZpXiEwTRoBNeM1IzXppBqwCrAKfQ1aWlyQOdVEbVd8NaALmQnPdnc+QoqxbcceCG9T40JdKCUYlaUiWcntplYWftAHazEKB5sdqfur235KjDxJwfywKznE+H2rnVod273kZseQHZTkbObCv+7cgcE+8rvJCR1JPZWYu/tPZWwKUmVDdr4A+vWtPHFaR+3OJm+zCQVHgWz+o8qV/txU/l20S/eGpvjtXNrngsB+ppI5FWYEeIyTTEPEp7Nx6yQy25OMtlnjzuN/IeXlV7dq2+cOzXMK84QpsJUqNyXMTmJXBJwzuFV7P+0dpdqCHgoE/qOXcMh1k866XJ0muDycL/AIV/UGlR3y3n8KRVEpGI5gPrdiv3g8vfyqi1ggEHIIyCORB7RTeog5BwQcg9xHbSRF+/P4iioHUEmO46HtEEGtYLNofAAk7iMv78jkaWqkEgjBBII7iNiKn2976lc8zyUd/KkdJbyFAly0iKJlyQSAfWLs4C8zvv7zVXbSfSmX1WWUgMpwRnIB7cY5dtdptHWnMYSSiYCoMGcxB0JjcDSL7R7VNtYy3HtFEJA1IOeLLXKCBlqRxg3I4XPPiR8aW31llxhc7lRvjAONuyk3HRfCsdYd1X+WNI3J/h9cnljrbjflueU+A3MMYjjtxnJbWWBUgbeyTgbHScbnlTdzw6dm1yXSwjbZMbDBTAC8xhSMZ7/e1LSFfkUT3AdVQO+e3iPnrNo2cyhalnNRPEjP3lYQYOeYM9ogjExTlGDAdn57A+Yq+O+T405Pc2UMelV9a6AhSRpB14LHOOYGeWcHfam+7+++kt40EYfeBPZu036cfPeK132OxILrWMEQlUDMA5g58TH/qDUngq5uYR/wART+E5/SipHRdc3cfgWPwRqKebEYC2FH+b0FP9qvlt1IH6fU1rOlyZs5vAKfwup/SuPXXHZRI0cUIGk6DJIx05wDsF3OzDtrtfHVzbTD/hSH4KTXD+OvGGQxTKSy6JBkEJcBiqhl5jKADPeoou6aBdxlAVCcpmAQZnIiTBUQDIy0JilrlzcMbNWu3MKCp0n3Yz7omrKz6TTxfzLe2nHgZVcd+ATpb5Vbw8Ut7tSyRhDnBC6gVP2XRicHyrHWt1nqtsw7O/ypcoaJxPEOuo669kib5Ru0tnkfD4A403Q9gtKUKPwqgBJO4LGgB0C0YSn8wKZhLsz7RvsPhF2ZBOu8Tv4FNXkiFJceHPvFW1gVJ3bB8eXxqrFysypLGcqdx377EHxB/I1IjpI4FNr99MESCDuIMEHtBr6SYcbmdd9aSSJlXI3HeNxVXId6jRyEciRTms1XcOhyIEdZoZDRRqaWKegTJqPqp6A70Oge8JrpQMVaxWwxUa7hAqysYoyN9X4sfpUfiUcY9lT7zmnTrMtzA7z8qXod9+M/rrXMemnEZGnjtI5PVq2nWwOMmQ6Rkj6oGD45pvot9HguDHHeGQupXSVYKzgjDBuXIHHnzNJ9IvDHLx3CIWUKFfAJI0kkZxuAQce6kcMtzdXMM0dp9HihAOcY1sCSANhq7PdnJ3ArZMBn/AkAKKWi2r2hSW49oP1YgVqUpQhITEcYKYCVj+9nKVBQicXwnhEAADWZk7q2zNTRNLamzXzVOlaUCoPHb1oYdaYyZFUudwgY41kdu+B76Y4GxK5Ll2PtMxywPif22860XDeGJckxv/ACyrGU8sIB1t+zuz2Zqms+Em3yoJePJEbt7WnI0q+O3H99g02zpXZ+yaUErKjloXUgDIHX3D+T4TMgFSVVivtXZ3T4/BUYAzG7OfPrpwOcvSf/VNT/3/AOqXqI/sZP7/AN8qYuTkftuarKG1DASUntr543a2yvcJUhfBUR0yE94qHLUW4jDqVYZDAg+RpM/rM9Xn/Xy/ekGfQMySJvy+p/3Hegw0pCwlBlW7DrIzy7Rr0qFktmEqBPZrXvR3i6QxSRTuF9QxUFubJltIA5nkeXZim7Tj11d3Cx2lqzK6sI9QIBIZQZWbkFXlgHt3OcCotjw2Kfidqsi64pWVWGSNRGoYOPur8a7hFbRw3kSIqogtJFCqAAAJYgAPjWy+42Lh++LbxKeTjg/Akx78AQSSsKJnjAG+vodrta4ctm4MQMzvJGW/SNOk1S9G/Rzbw4lugLu4O7PKNUan7KRnbA7Mj4cqy/BeJPAZo0AAEzxFQMgGGQquB2dXHxNa/ppxu8juLe0slh9ZOsrF5ckIsenkB59x8qhcE6AOmt7i69Y8jPI+lNI1yHUTz7ydgBUv2HH7XFjAVkUDsGJJEAQkQTGgyHOlO0bZ24b/AAjCwZB45EETnqCamw2t0zkzS6QSAQoQEg5JIK8sZJ8ezNVc3CbaPJuJy5BAOk4yCo7F3IyTy7twM1AvZpZGMYk9Z9XGQpYKSfZ/vnUH/ZEh9saR4YbPmM1k3rlAglBO+VEns0GR0ieM0kZaduSAxbrczMFUqHU/B1Kh0mTaTcShnjMawbsE1OcHQUC4Ck5JGFK8+3zyzIc0iKEKMDl4dopTUpubhT6wTuy9a+lbF2euzZPtSC4qMUaCJhI4xJ6kxllVx0MXNz5I5/IfrRT3QVP4znujx8WX9qK1mxRFqJ3k0FtgzccgPnWxvE1RuvejD4giuVekDgUUnCluY4kFwhgzIoAkIYiLDMNz7Q591ddrhHTro1cN6m8iXMMKCKbDAMvq7iQ6ipPWXdeWeVOrExeI96MjnyKcus0F/AV/UnyV8qzl2ZbfC31rPG24V9Okvjnu5CtjPME86IekUC7D6QfvCPb/AD12D0w8G+k8NkcDL25E6+S5D+7QWP8AhFZb0P8ARuxvLJmmtUkljmdCzaslSquu2cfWI91WHZuzHmC+40RnBSlRAz4AnIHgMuFJ3NmMLMZxwnLoIMdKwVu0pnSCG5MUU5MikKGCsQTpxtvlQuM91dBjO1VfpC6EGwIu7ZC1usiSlBlmgdWG4J3MZG3ht2VZ27ZUH++YpD9pkpWhtac9QTAlWglUZ4ogEnUgkZEVrPs+VhK21kmMIE8M4/eN9PrSxTa04KxhrQGvadi501S0rmqzV3ZttTV+aLM7VXdIrJpQoV9GM55kMMeyUBAYE89+XnWhaShxIStWEbzBMZE6DM6bs6WqJSqQJ7KqLni6DWFDOybnClVxkqTrbCkAg7gnwyarE4+7kaEQg6BoJZnBZYm1nScaB63HLmOfZVkeDIZHkZ2LPsSD6vAByB/C0lsbDJJ2HnmVHCqDCoFwAuwA2UYA8hVYd2WzmhouKgZqOWYE5wCYM54EnoaJSl9WqoHZ9R4mqrhXrmJkmULlFAAGnmqtp0kkjDFhv3VPuJVRS7EKoGSTsAKfaq5+Fpd3tnbylvUu8pdASNZjiLgEjsyCPInzri3A2leJQqEAj8o0ShJOQ4kJ5SZiK7eX91YUsZxx7T+9ecIuOI36yR2EaxQMQrXU3V1aTuqbHbPPCk7DOOVXN70Uls7cSS3jTuXCtkEKMhjtlj2gd3OukgRQRgdSKKNQB7KIijYDuUCsf0n6U2dxA8UUwlbKkFASgIYE9fkds8ia3NoEowt27YSgdknX8yznOc5EDMwBWTdeccJUtWvQd2lZH1mO2kXbMq6jFsdgWV8E9wOa6N0FtlFqr6RqZnOcDOzFRv7qf6a8O+kWcqgZZR6xfNN8DxK5Hvrp/wC7uu4HWwc4kgfL1oN21ZdzcSDzH0a4Pxjicg9jqH+kYP4h1qa4V0G4leHUsDgH/eTMyD/N1iPIGovE5dJDj6pDD3HNfUMLZUEdoB+Ipm44jZzYFu2lOKdABpHCJ1310ww238CQOQA8hXz50fspbW+t7addMsN5CRncNHJiPKH6wzp+Xca3HpOkYcT4QoYgNcLqAJAYLPbsAw7cHfetV0p6LpdvbTjCzW80Uit9pFkVnjbvBAJHcfM1mfSWueK8G/57/J4DQTLqXHgpO8OEjcCUkmOwmVc1EbqiGvZ4o3meUxPjn1q84oueM2nha3B/zIK0kt7GG0GVA5OkLqGrJHYuc5rPXO/G4fCxmPxnQVZXP0OO4DuYluG0gEkesOeqpx8s+6hViQgZ/Du5mrhWS6VWa2tzbsowjAKfMHDHzw4NeXRq49Jtpqs/WDnE6nP9LdQ/MqfdWYfiC6I2J3dQfeRk/r8DSLblspxhktJkwUQB+nMdAJptshSUBSNAIjhw+VKNIalmkNWMFaMVqOgK7zH/AJY/7/8ASipHQSP+FI3e+PgoP/lRW42WMNojqe8msrtMzdK6eQrT5rkfpF4/NaWrxoqNFNPeW8gYNqGrDRujA7EZJ3yDXTpp6436Xr6P1LwE4k+lrOowcMpiKPg8sglDg9hptZpCrtoESCY8J8InpQwP4SxyPjHrXWXjme6dHTVaPbKMkrgSiRw66c6utG435dT48+9D8LWd7xCwcnKFWXPaqMy6/wDErxn3irfpt04ksLyyjyvqZVDTahuFLhdQbswCT7qlcTsfo/G7a5UdW6ikt5D2esRPWIT4sEUf4KJaCksFKgIWmRzQZz7YBHUcaoJzrS8Suo29ZBqBkEQkaM8/VuWUNg8xlWH58xXLbKdDrjUYMTlCuMYH1cd4x+VSvThPNaS2d7A2l19bET2EdVgjDtUjXkV7wW8FzYJcaArGVge0jVlyueeMk0l2vaA2fteyR2EKgg9OXhm02W8UPBPEwe4kUpacFNpTgrBmtOa9FLSkCvRXNcGrW0NF5SLQ17dmnE/hUFH4lVjUg0tqQaTijhSGpm1bTe2Lf/1BP/khkWnmqHcPpktX+xe2re4y6T8mNN9imL5rmR3pI9aovRNsvkasPT6hNvbEE49cylQTgkpkbdp2OPM99ZDgXC54oQ8sEkakgAyIyZOCdtQGdgfhXfp1TZ3C9TrBmx1dsEgnlsTvWJ6b8etJ7Yxx3Ecrq6sojOsZBIPWXIGxPbX0e0vFezSwE5TmefSsaRvrT9FotNnAO+NW/F1v1q0BB8ajWierhRQM6Y1GB/So2qh6CWtxFE6TxlOvrTJUk6/aGAdtxnf7RpcoY8S5398k+VdVxDp7w76NdTQ4wFc6PuONSf5SB7q+h+js3rLS3k+3BE34o1Ncs9PPC9LQXQGzAwufFcunxBf8IroHo6m18Msz3QIv4Bp/Smd6v2tm052kHu/auRkavoZlcZVgwBZSQQQGUlWG3aCCCOwiufekZc8U4L/z5vkYDVPwDpZ9D41d2krfwJ7ltJPJJnwQfANkKfHSe+nvTXxF7a44bPGoaSNrhlUgkFv4AXIG53PLtqpi2U3cpTriSSOqD9eOlQmRV30g4/b2XFlkuZQi/wCzyo2ZiWa5GAFUEk4Q/CsjxzjS3lzJPHq0EIE1DDYVQM47Otk1D4d6OJ7lTeXt0dbnWyAa5N9gXY7Lz9kA4GPKtJY9FYI105c8vaYD8gKHc2ts22UlIcK14R8IlMcQdDnvk9KvRauuAwI517ddJbm9iNuI49LKFkchj/iznAPbjBpuGyWNET2tHInzz8M1r7HhkUcP8sDsXnyHM899+2s/xGLS3LY7j9qyG2trF0pabGBOSgBrnMEnjhzgZAHeZhvs5ptKjvVx3dPmahGm3pw029ZwU8FbfoSmLc+MjH5KP0oqR0QXFrH46z/nYfpRW9sRFs3/AEjyrI3xm5c/qPgYpu6krnXTLgYvWeMbSYDRHvkCYCeTY0+ZB7K6DeCsfxpiJVYHB0qQR2EM3+leXjymEB5GqFAjy8Zjkau2agOOqbP5kqHkfSuef/hVzLFE+ZCCi6Q2XCEkgoMez1gwxgcqt5JOMuIV+lI4jcSQ6kGQ0S7EN6rJ6pOcncHfnWyvZJQjXFrIF1ka030JIAdiN9KtkkHlvg8qxk/pGvIWMcodCOYIjbI5ZBK78uzxou02ltC7JS0AsjOClqQDvTJQrCdJzIOSjiEUivLS9tlaqKZIBhs79DJTBI3RvkEiq7precTuLfN3OkkSSAgKirh8EcxGp5E7ZrQ+jl9XCSO6cn3Hq/pWX6Q9PJbqFoZNTKQOYjGDgqp6q9gJ2q+9FkubC4T7JQ/9Rs/mKs2mLn/Dli4RhPvRASMsBOiVKAzB1zo7Yxd9qPazMjUJGqkjRJPGr9aWKbWnBXzU1uFUoV6K8FArmuasLU0q5NN2ppdwaZpMtUIR79V7Ug0tqQaWCixSGqt42+Ig32ZYH/DPGasmqt4+M203hGx/CM/pTDZisN4yf50f7hPhXL4xMrH8p8q2HpoTVwqQ9zxH4uB+tcp6Hx6jGn2nRfxMBXWfSj1+CzMN+pA3/WiJ+Wa5h6Notdzbr/xVP4et+lfWLAkWSuxR8hWHOtfQc0oRSzbBVLHyAyay3DuncE86QLHINeQHfSBkAkDAJ54NTum96IrKbcZZNAGdz6whDj3En3VxJrlo2WRThkYMp8VOR8xS+ztUvIJPId3716TBrsXpM4T9K4bcKBlkX1ybZOqLrEDxKhl/xVG9EEurhNv/AE+tX4Svj5Yqtv8A0tWUcYxHLK5UZUKAoON1ZnIz7ga53wHpffw230aziEUet2EpUsVV2yFDN1ds88Enwq5Nu99zUl2EJCgZUQkaEHM9D31ytaUDEogDichVZ6V0xxa6H9SH4wof1rW9ELKa+MXEbyUyv/JgB5II8K0h/qJJ95J7sYHpPZSRkPM7SSuSXdiWycLjrNudjz7sV1ToSPV8Jt27jOPfIVH5En3UNty7SdkJUwqQYRizHuiUrjQicMZQSMhrReysFw4lacxnHOSBr2z3Vq7a8xobHVOrq/0FmXH4aWOHnXoXfJGk9hQ76vhUZYySqgEnRHsO8xgkfEmr4yeqQKTlgNz2jO+kGvnzKgpbvtJwpOo46FI7VATl8MEmATTN5fsz7mp3eR6adtNX7gAIvJeqPdzrP8ZXqA/1/mD+1WbPk5NZ3pVPqMcSnf2m8M7D5ZNLX1KfuMSsjqfrsEDlV1k2Q4E858ZqKaaenTTTmvBpTlGtdI6PJi2h+4D+Lf8AWin+GLiGId0aD4KKK+htphAHADyrFPqlxR7T51X3sdYzpEuHTxB+RzXQb2LasN0niwynxI+I/wBKG2inFbKHLzFF7MVF0jr/ALTUHh920TalwdsFcZVlPNWHaKk8Q4RY3q6WPqz9iQFgp/olXdR51Wx08KyLN4tkgp3GRqCDxSoEKT2wYO8GtK8yFz9TzBkHqJ4GsvxP0UMDmG/tin/FkYMPwoc/AVY9B+E/Q/pFv65ZcxyOWQMFyph2Grn2nPjVrLyqptFPrm0sQQQdjjKkEMp7wR2d4HdWi/6hfvgGn4wwRO/MFIk5cc+850ANlobBcQc5GW7IhXplVmKdFNCnRWS3U1VrSqBRQK5ripdsacnNM25p2ajkH8Khj8VQmpBpbUg0CKJFIaofE01RSr9qKQfFCKmPTRq9lZbWFjcQe4zXcSIrLdK/SW9zapZwx6IvVxxyswBeQqBkKOSrkeZ8Kq+jgyAAcHIAPntXRrFYgwMkEcqcmR0VgVPPZhz7R5VKv+hdsMXFsCqag+EOQhBzjSeQ8sYr6RbfaW0dYWENlBEncqOCjkCROsJMRwzGQutmPNe6lQJIyOkmDlz3jPOsceHH2iSRnGpd9+eNXfUiHgXrc6I5GI54K7bZ7F7vGtbwbpAqRRwi3LKjZLasEMJCdQHaMbY2zyzRxDp2EMgwoIK6NT6mXDMSSB24Ix2DHbShvaN9c/C+omM0oRmMuIBMTkDx01rHtvuvISsvqg7ko3xJAIHQagmqbh/QZmVmeKOM5QoXVXJDMFJLEnRjY4xner1uBWlvGDcYyuCQC+WIZ1IwN8HA2AG+N6xHEvSFIcD10jMBjqKiD6p3OQSeqN8dlZDiHSaV86Boz9ZSfWHPPrZolnYt7dKClNn+p5U6/wAvvKnsgDLPWrG7VS8w0SeLh9Mz2ZRunU1Z+ku9jmmDR4HsjTzYARqpJ8yua6B6PI2ueExxJ7SSayCQOrl1J37sA++uLWttJPKsSKZJJGCqo5szHvP5nzrr9hZiyRLeLD6Fw0mTh5SSXbH2cnC47FHfmivtC23Y7NatyrEcRP6ZBC8XHCAVSMjpGdazYjC0KKUmSATMZSVTpPMRPlW4lvUiJ0bsfr9v3UHYMdtRGus7sQB51m1VmOWdifDqj5VNWBe7PmTWCSsvLKlnjAAyEmTHPeTJO809+6IQNc6lXvFwuydZvkP3qmijOS7nLHvqcygcgBTDVS7hTkkczvolpKUiEj50k009OGn+F2plmjTGcsCfBQcsfhVbbZWoJGpy76vCwj3juz7q6ZGmAB3AD4UUuivoh1rD0iRcisV0ygwoP9YPyI/WtxVL0osPWwtgbgZ+FVPt+0aUgbwR3irrd32TyXOBB+dc/jAPbg/3206UI5ioqbbU+khHI1h3U4VFLghQ1/t6jWtiCFgKQZB0oflVVbbXB8V/U1avIDzGD8v9KqY9rgfdP513bphfd512PhNWQpwU2KcWhN1RVLoFAoFcVxT8Bp2XlTMJp2TlRTZ/DNUq+KoppBpZpBoarhSHps049NmuxVop2KrjhN+8O6nY81O4Pu/WqeKpsB2qxhakOhSTB+vrwoa4QFpKVCRWg0wT+y3qpD9U+wT4Hs/vaqri/R9yMSwh178a/eCNx8qZzUm14rNFsrnH2fa+GeXupmLhtRxLBSf1IyPOMh/pIPZQSkOjJJxDgrPx17551guJ9CYJM6GeI93tL7w2/wA6qV9GV5JtDplHfunx1DA+NddPSuX7EXnhv/tVffccnkG74X7K9Ue/tPxptafaa5tRncF0cFNif9ZOLxNUL2eHP4YT2hR8oA8qouBdHouFoQGWW6ddLyr7EKn2kizzJ5F+flTg50t69trZ5G0pGzn+kcvM8h76Q3t9cbQf9o5mToBu7BTO2t27ZvCnqTA7+zyp6OpAlFSIujF231VX7zL+maeHQ647ZI/cX/YVGtnXe5B65ecVWu4tx8Tiehnymq6SSo7OO+rxOhcp9qZR5Ak1PtuhkY9uRm8gB+eflRCNiXCzKyB4+U+dDr2nao+ElXIR5x5VkkbUQqgsTyArd9GeE+oTU467c/6R9mrCw4ZFD/LjAPaebHzJ3qbTyz2Yzbe8M1cT6Dd4ntpPdX7j4w6J4fM7/AdlFFFFMaBooooqVKy3HuiolJeEhWPNT7JPh3Gsjd2MsJ0uhHnsD5Nyrq9NyxhhhgCD2EZFD3Fo1cCHBPbvHWiLe6dYPuHocwenyg1ySdCvVZSpxnDDG3eO8eNRYgS6to5HGrUN/DTzroXF+jy6SYsAc/VtvGT4Dmh8RisSx0FkKlesGA54PIjP98qTK2cm1JWTKYMTqDqJ48O2YinrG0TcwhIhQIJGoKdDy1mNwEzlQKdWm1pxazZ0pqqligUCgVxXFORGnZOVNR04/KrkH3DVStaYNINLNINVVaKQ9NmnHps12KtFOxVMh5VDjNOCcDtrxJhU1SsTUzNNuajG7HfSGvB3V2pwkRFeJZUd1PNSDTauzHCqT/fdzNW1h0bnlI1D1a/aOx9w5n5UVb7MuXtEwOJyH1yqh67ZZ+NQngMz4adYqvs7UyuI1GSe7s866Lwrh6wRhBz7T49tI4TwmO2XCDftY8zVlWqsrBFqnLNR1PoOA86zt3eruTGiRoPU9vlRRRRR1B0UUUVKlFFFFSpRRRRUqUUUUVKlFFFFSpSXXIxXOOltpolV8cwR8OVdJqg6VcK9dESo6y7gd/fVFywH2lN8fPUeNEWr/sHkucPLQ+HjWAWnlpgbHB2p9awz7K2VlDgg1r0OodTjQZH19RShXteCvaHqUtKdamBSya6BgGuCM6bNJNKNJNeV2KQ1ewWzyNpRdTfAAd5PYKI42kYIo1Mdtt633AuDiBBqA1c/I95Pa35dlOLDZa3/AHl5J8Ty+fdNBXm0UW4wjNXDhz+XfFU9j0L2zNMc/ZQYx72/YVYx9D7Yc9bfebH/AGgVoqK0aNn2yNEDrn50jXtK6V+cjll5VRr0Yth/uviWP5mn4uAWy/7hfeM/nVrRRKG0I+EAchHlFCrdcc+NRPMk+dMw2yJ7KKv3QB+VPUUV3VdFFFFSpRRRRUqUUUUVKlFFFFSpRRRRUqUUUUVKlFFFFSpRRRRUqVn+N9GI58svUfv7D5isfe8HnhPWQ47wNS/6V1CiqnmG3k4XBI+tOHSrWX3GVYmzHrzGh61yVHPn5c/wnf4UGfHtBh5gj866bdcKgk9uFD7gD8RVDfcIhT2UK+TOP1pO7sJk5oUR4/Kmje2FaLQDyJH/ANVj/pSd9KFznkCfIE1ohYR55H8T/vV5Z8DtyN4gfvFm/M1UPs+mc3PD967O2knRvvV/xrArqY4C79x5/hG/yq2sejM8uC/8Nf6tj7l/et7DbIg6iKvkAKepgxsm2aMxJ7c/DShHtqPuZJ90dmvfr3RVbwjg0VsMIu/ax5n9qsqKKZUuooooqVKKKKKlSiiiipUooooqVKKKKKlSiiiipUooooqVKKKKKlSv/9k=');
+        border-radius: 3px;
+        color: transparent;
+		box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+        background-size: 100% 100%;
+
+
+	}
+
+	@media screen and (max-width: 520px) {
+		.tile.tile-512 .tile-inner {
+			font-size: 25px;
+		}
+	}
+
+	.tile.tile-1024 .tile-inner {
+  background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLNRF6UFd1Z1YeWVT1rgOLCr6gfxCtgAPtZg&usqp=CAU');
+        border-radius: 3px;
+        color: transparent;
+		box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+        background-size: 100% 100%;
+
+
+	}
+
+	@media screen and (max-width: 520px) {
+		.tile.tile-1024 .tile-inner {
+			font-size: 15px;
+		}
+	}
+
+	.tile.tile-2048 .tile-inner {
+  background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxF3K4PM_ATvdIcdjqgAKf3KQ2S46tcsNaDA&usqp=CAU');
+        border-radius: 3px;
+        color: transparent;
+		box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+        background-size: 100% 100%;
+
+
+	}
+
+	@media screen and (max-width: 520px) {
+		.tile.tile-2048 .tile-inner {
+			font-size: 15px;
+		}
+	}
+
+	.tile.tile-super .tile-inner {
+		color: #f9f6f2;
+		background: #3c3a32;
+		font-size: 30px;
+	}
+
+	@media screen and (max-width: 520px) {
+		.tile.tile-super .tile-inner {
+			font-size: 10px;
+		}
+	}
+
+	@-webkit-keyframes appear {
+		0% {
+			opacity: 0;
+			-webkit-transform: scale(0);
+			-moz-transform: scale(0);
+			transform: scale(0);
+		}
+
+		100% {
+			opacity: 1;
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			transform: scale(1);
+		}
+	}
+
+	@-moz-keyframes appear {
+		0% {
+			opacity: 0;
+			-webkit-transform: scale(0);
+			-moz-transform: scale(0);
+			transform: scale(0);
+		}
+
+		100% {
+			opacity: 1;
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			transform: scale(1);
+		}
+	}
+
+	@keyframes appear {
+		0% {
+			opacity: 0;
+			-webkit-transform: scale(0);
+			-moz-transform: scale(0);
+			transform: scale(0);
+		}
+
+		100% {
+			opacity: 1;
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			transform: scale(1);
+		}
+	}
+
+	.tile-new .tile-inner {
+		-webkit-animation: appear 200ms ease 100ms;
+		-moz-animation: appear 200ms ease 100ms;
+		animation: appear 200ms ease 100ms;
+		-webkit-animation-fill-mode: backwards;
+		-moz-animation-fill-mode: backwards;
+		animation-fill-mode: backwards;
+	}
+
+	@-webkit-keyframes pop {
+		0% {
+			-webkit-transform: scale(0);
+			-moz-transform: scale(0);
+			transform: scale(0);
+		}
+
+		50% {
+			-webkit-transform: scale(1.2);
+			-moz-transform: scale(1.2);
+			transform: scale(1.2);
+		}
+
+		100% {
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			transform: scale(1);
+		}
+	}
+
+	@-moz-keyframes pop {
+		0% {
+			-webkit-transform: scale(0);
+			-moz-transform: scale(0);
+			transform: scale(0);
+		}
+
+		50% {
+			-webkit-transform: scale(1.2);
+			-moz-transform: scale(1.2);
+			transform: scale(1.2);
+		}
+
+		100% {
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			transform: scale(1);
+		}
+	}
+
+	@keyframes pop {
+		0% {
+			-webkit-transform: scale(0);
+			-moz-transform: scale(0);
+			transform: scale(0);
+		}
+
+		50% {
+			-webkit-transform: scale(1.2);
+			-moz-transform: scale(1.2);
+			transform: scale(1.2);
+		}
+
+		100% {
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			transform: scale(1);
+		}
+	}
+
+	.tile-merged .tile-inner {
+		z-index: 20;
+		-webkit-animation: pop 200ms ease 100ms;
+		-moz-animation: pop 200ms ease 100ms;
+		animation: pop 200ms ease 100ms;
+		-webkit-animation-fill-mode: backwards;
+		-moz-animation-fill-mode: backwards;
+		animation-fill-mode: backwards;
+	}
+
+	.above-game:after {
+		content: "";
+		display: block;
+		clear: both;
+	}
+
+	.game-intro {
+		position: absolute;
+		left: 50%;
+		top: 10px;
+		transform: translate(-50%);
+		line-height: 42px;
+		margin-bottom: 0;
+	}
+
+	.restart-button {
+		transform: translate(0, -12px);
+		position: relative;
+		display: inline-block;
+		background: #8f7a66;
+		border-radius: 3px;
+		margin: 10px;
+		text-decoration: none;
+		color: #f9f6f2;
+		padding: 8px;
+		width: 100px;
+		height: 40px;
+		line-height: 42px;
+		text-align: center;
+	}
+
+	.game-explanation {
+		margin-top: 50px;
+	}
+
+	@media screen and (max-width: 520px) {
+		html,
+		body {
+			font-size: 15px;
+		}
+
+		body {
+			margin: 20px 0;
+			padding: 0 20px;
+		}
+
+
+		.container {
+			width: 280px;
+			margin: 0 auto;
+		}
+
+		.score-container,
+		.best-container {
+			margin-top: 0;
+			padding: 15px 10px;
+			min-width: 40px;
+		}
+
+		.heading {
+			margin-bottom: 10px;
+		}
+
+		.game-intro {
+			width: 55%;
+			display: block;
+			box-sizing: border-box;
+			line-height: 1.65;
+		}
+
+
+		.game-container {
+			position: relative;
+			padding: 10px;
+			cursor: default;
+			-webkit-touch-callout: none;
+			-ms-touch-callout: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-ms-touch-action: none;
+			touch-action: none;
+			background: #bbada0;
+			border-radius: 6px;
+			width: 280px;
+			height: 280px;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+		.game-container .game-message {
+			display: none;
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			background: rgba(238, 228, 218, 0.5);
+			z-index: 100;
+			text-align: center;
+			-webkit-animation: fade-in 800ms ease 1200ms;
+			-moz-animation: fade-in 800ms ease 1200ms;
+			animation: fade-in 800ms ease 1200ms;
+			-webkit-animation-fill-mode: both;
+			-moz-animation-fill-mode: both;
+			animation-fill-mode: both;
+		}
+		.game-container .game-message p {
+			font-size: 60px;
+			font-weight: bold;
+			height: 60px;
+			line-height: 60px;
+			margin-top: 222px;
+		}
+		.game-container .game-message .lower {
+			display: block;
+			margin-top: 59px;
+		}
+		.game-container .game-message a {
+			display: inline-block;
+			background: #8f7a66;
+			border-radius: 3px;
+			padding: 0 20px;
+			text-decoration: none;
+			color: #f9f6f2;
+			height: 40px;
+			line-height: 42px;
+			margin-left: 9px;
+		}
+		.game-container .game-message a.keep-playing-button {
+			display: none;
+		}
+		.game-container .game-message.game-won {
+			background: rgba(237, 194, 46, 0.5);
+			color: #f9f6f2;
+		}
+		.game-container .game-message.game-won a.keep-playing-button {
+			display: inline-block;
+		}
+		.game-container .game-message.game-won,
+		.game-container .game-message.game-over {
+			display: block;
+		}
+
+		.grid-container {
+			position: absolute;
+			z-index: 1;
+		}
+
+		.grid-row {
+			margin-bottom: 10px;
+		}
+		.grid-row:last-child {
+			margin-bottom: 0;
+		}
+		.grid-row:after {
+			content: "";
+			display: block;
+			clear: both;
+		}
+
+		.grid-cell {
+			width: 57.5px;
+			height: 57.5px;
+			margin-right: 10px;
+			float: left;
+			border-radius: 3px;
+			background: rgba(238, 228, 218, 0.35);
+		}
+		.grid-cell:last-child {
+			margin-right: 0;
+		}
+
+		.tile-container {
+			position: absolute;
+			z-index: 2;
+		}
+
+		.tile,
+		.tile .tile-inner {
+			width: 58px;
+			height: 58px;
+			line-height: 67.5px;
+		}
+		.tile.tile-position-1-1 {
+			-webkit-transform: translate(0px, 0px);
+			-moz-transform: translate(0px, 0px);
+			transform: translate(0px, 0px);
+		}
+		.tile.tile-position-1-2 {
+			-webkit-transform: translate(0px, 67px);
+			-moz-transform: translate(0px, 67px);
+			transform: translate(0px, 67px);
+		}
+		.tile.tile-position-1-3 {
+			-webkit-transform: translate(0px, 135px);
+			-moz-transform: translate(0px, 135px);
+			transform: translate(0px, 135px);
+		}
+		.tile.tile-position-1-4 {
+			-webkit-transform: translate(0px, 202px);
+			-moz-transform: translate(0px, 202px);
+			transform: translate(0px, 202px);
+		}
+		.tile.tile-position-2-1 {
+			-webkit-transform: translate(67px, 0px);
+			-moz-transform: translate(67px, 0px);
+			transform: translate(67px, 0px);
+		}
+		.tile.tile-position-2-2 {
+			-webkit-transform: translate(67px, 67px);
+			-moz-transform: translate(67px, 67px);
+			transform: translate(67px, 67px);
+		}
+		.tile.tile-position-2-3 {
+			-webkit-transform: translate(67px, 135px);
+			-moz-transform: translate(67px, 135px);
+			transform: translate(67px, 135px);
+		}
+		.tile.tile-position-2-4 {
+			-webkit-transform: translate(67px, 202px);
+			-moz-transform: translate(67px, 202px);
+			transform: translate(67px, 202px);
+		}
+		.tile.tile-position-3-1 {
+			-webkit-transform: translate(135px, 0px);
+			-moz-transform: translate(135px, 0px);
+			transform: translate(135px, 0px);
+		}
+		.tile.tile-position-3-2 {
+			-webkit-transform: translate(135px, 67px);
+			-moz-transform: translate(135px, 67px);
+			transform: translate(135px, 67px);
+		}
+		.tile.tile-position-3-3 {
+			-webkit-transform: translate(135px, 135px);
+			-moz-transform: translate(135px, 135px);
+			transform: translate(135px, 135px);
+		}
+		.tile.tile-position-3-4 {
+			-webkit-transform: translate(135px, 202px);
+			-moz-transform: translate(135px, 202px);
+			transform: translate(135px, 202px);
+		}
+		.tile.tile-position-4-1 {
+			-webkit-transform: translate(202px, 0px);
+			-moz-transform: translate(202px, 0px);
+			transform: translate(202px, 0px);
+		}
+		.tile.tile-position-4-2 {
+			-webkit-transform: translate(202px, 67px);
+			-moz-transform: translate(202px, 67px);
+			transform: translate(202px, 67px);
+		}
+		.tile.tile-position-4-3 {
+			-webkit-transform: translate(202px, 135px);
+			-moz-transform: translate(202px, 135px);
+			transform: translate(202px, 135px);
+		}
+		.tile.tile-position-4-4 {
+			-webkit-transform: translate(202px, 202px);
+			-moz-transform: translate(202px, 202px);
+			transform: translate(202px, 202px);
+		}
+
+		.tile .tile-inner {
+			font-size: 25px;
+		}
+
+		.game-message p {
+			font-size: 30px !important;
+			height: 30px !important;
+			line-height: 30px !important;
+			margin-top: 90px !important;
+		}
+		.game-message .lower {
+			margin-top: 30px !important;
+		}
+	}
+
+	.right {
+		float: right;
+	}
+
+	.left {
+		float: left;
+	}
+
+	.clearfix {
+		clear: both;
+	}
+
+	.play-now {
+		margin-top: 22px;
+	}
+
+	.play-now a {
+		border-radius: 6px;
+		padding: 12px;
+		text-decoration: none;
+		background-color: #bbada0;
+		color: white;
+	}
+
+	.play-now a:hover {
+		text-decoration: underline;
+	}
+
+	body {
+		margin: 30px 0;
+		margin-top: 0px;
+		margin-bottom: 0px;
+		padding-top: 15px;
+		position: relative;
+	}
+
+	footer {
+		padding-bottom: 30px;
+	}
+
+	p {
+		line-height: 1.45;
+	}
+
+	.heading {
+		margin-bottom: 20px;
+	}
+
+	.side-column {
+		background-image: url(/img/pattern/amam.png);
+		background-position: 0px 0px;
+		background-repeat: repeat-y;
+		width: 180px;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+	}
+
+	.side-column-left {
+		left: 0;
+		border-right: 1px solid white;
+	}
+
+	.side-column-right {
+		right: 0;
+		border-left: 1px solid white;
+		background-position: -19px 0px;
+	}
+
+	.side-ad {
+		margin-top: 360px;
+		margin-left: 10px;
+	}
+
+	@media (min-height: 769px) {
+		.side-ad {
+			margin-top: 400px;
+		}
+	}
+
+	.side-ad .sponsored {
+		text-transform: uppercase;
+		font-size: 10px;
+	}
+
+	.grammarly-box {
+		padding: 20px;
+		background: #fff;
+		margin-bottom: 30px;
+		border: solid 1px #eee;
+		border-top: solid 2px #F08150;
+	}
+
+	.grammarly-box .caption {
+		font-size: 18px;
+		line-height: 25px;
+		margin-bottom: 10px;
+		display: inline-block;
+	}
+
+	.grammarly-box p {
+		margin-bottom: 0;
+		line-height: 1.3;
+		font-size: 14px;
+	}
+
+	.bold {
+		font-weight: bold;
+	}
+
+	.box-shadow {
+		background: #fff;
+		position: relative;
+	}
+
+	.box-shadow:after,
+	.box-shadow:before {
+		top: 80%;
+		left: 5px;
+		width: 50%;
+		z-index: -1;
+		content: "";
+		bottom: 15px;
+		max-width: 300px;
+		background: #999;
+		position: absolute;
+	}
+
+	.shadow-effect {
+		position: relative;
+	}
+
+	.shadow-effect:after,
+	.shadow-effect:before {
+		transform: rotate(-3deg);
+		-o-transform: rotate(-3deg);
+		-ms-transform: rotate(-3deg);
+		-moz-transform: rotate(-3deg);
+		-webkit-transform: rotate(-3deg);
+		box-shadow: 0 15px 10px #999;
+		-moz-box-shadow: 0 15px 10px #999;
+		-webkit-box-shadow: 0 15px 10px #999;
+	}
+
+	.shadow-effect:after {
+		left: auto;
+		right: 5px;
+		transform: rotate(3deg);
+		-o-transform: rotate(3deg);
+		-ms-transform: rotate(3deg);
+		-moz-transform: rotate(3deg);
+		-webkit-transform: rotate(3deg);
+	}
+
+	.top-link-ads-wrapper {
+		border-bottom: 1px solid #D7C7B9;
+		padding: 4px;
+		margin-bottom: 15px;
+	}
+
+	.top-link-ads {
+		height: 15px;
+	}
+
+	.text-center {
+		text-align: center;
+	}
+
+
+	.unstyled {
+		margin: 0px;
+		padding-left: 0px;
+	}
+
+	.unstyled li {
+		list-style: none;
+	}
+
+	h1.title-internal {
+		font-size: 40px;
+	}
+
+	.shop-learn-more {
+		padding: 10px 0px;
+		border: 1px solid #d8d4d0;
+		text-align: center;
+		display: block;
+	}
+
+	.shop-learn-more:hover {
+		background-color: #d8d4d0;
+	}
+
+	.tips-and-tricks {
+		clear: both;
+	}
+
+	.tips-and-tricks li {
+		margin-bottom: 10px;
+		margin-right: 10px;
+		float: left;
+		border: 1px solid #d8d4d0;
+	}
+
+	.tips-and-tricks li a {
+		display: inline-block;
+		padding: 10px 0px;
+		width: 242px;
+		text-align: center;
+	}
+
+	.tips-and-tricks li a:hover {
+		background-color: #d8d4d0;
+	}
+
+	.tips-and-tricks li.even {
+		margin-right: 0px;
+	}
+
+	.shop-list .item-link img {
+		width: 195px;
+		height: 195px;
+	}
+
+	.shop-list .item-link {
+		margin: 5px 0;
+	}
+
+	.quotes .quote {
+		margin-bottom: 20px;
+	}
+
+	.iframe-main {
+		position: absolute;
+		background: transparent;
+		width: 100%;
+		height: 100%;
+		top: 50px;
+		padding: 0;
+	}
+
+	.score-sharing {
+		display: inline-block;
+		margin-left: 10px;
+	}
+
+	footer {
+		font-size: 17px;
+	}
+
+	#flappy-thirds-wrapper {
+		text-align: center;
+	}
+
+	#flappy-thirds-wrapper canvas {
+		border: 1px solid #d8d4d0;
+	}
+
+	.choose-language,
+	.solitaire-ad {
+		text-decoration: none;
+		font-size: 14px;
+		margin-left: 10px;
+	}
+
+	.solitaire-ad {
+		padding-left: 5px;
+	}
+
+	.solitaire-ad img {
+		margin-left: 15px;
+	}
+
+	/* patch flag icons */
+	.choose-language span.flag-icon {
+		border: 1px solid #776e65;
+	}
+
+	.flag-icon-en {
+		background-image: url(../flags/4x3/us.svg);
+	}
+
+	.mobile-top {
+		position: relative;
+		display: none;
+		margin-bottom: 15px;
+		color: #f9f6f2;
+	}
+
+	.mobile-top .open {
+		background-color: #776e65;
+		padding: 10px 0;
+	}
+
+	.mobile-top .closed {
+		display: none;
+		height: 20px;
+	}
+
+	.mobile-top .ad {
+		width: 320px;
+		height: 100px;
+		margin: 0 auto;
+		background-color: white;
+	}
+
+	.mobile-top .close-btn {
+		position: absolute;
+		top: 5px;
+		right: 10px;
+		color: white;
+		text-decoration: none;
+	}
+
+	.mobile-top-alt {
+		display: none;
+	}
+
+	@media screen and (max-width: 860px) {
+		.side-column {
+			width: 130px;
+		}
+
+		.side-ad {
+			display: none;
+		}
+
+		.solitaire-ad img {
+			width: 100px;
+		}
+
+		.side-column-left {
+			background-position: -60px 0px;
+		}
+	}
+
+	@media screen and (max-width: 760px) {
+		.side-column {
+			display: none;
+		}
+
+		.mobile-top {
+			display: block;
+		}
+	}
+
+	@media screen and (min-width: 481px) {
+		.tile .tile-inner {
+			line-height: 107px;
+		}
+
+	}
+
+	@media screen and (max-height: 768px) and (min-width: 481px) {
+		.heading {
+			margin-bottom: 15px;
+		}
+
+		h1.title-internal {
+			font-size: 40px;
+			line-height: 64px;
+		}
+
+		.container {
+			width: 450px;
+		}
+
+		.game-container {
+			margin-top: 10px;
+			position: relative;
+			padding: 12px;
+			cursor: default;
+			-webkit-touch-callout: none;
+			-ms-touch-callout: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-ms-touch-action: none;
+			touch-action: none;
+			background: #bbada0;
+			border-radius: 6px;
+			width: 450px;
+			height: 450px;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+		.game-container .game-message {
+			display: none;
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			background: rgba(238, 228, 218, 0.5);
+			z-index: 100;
+			text-align: center;
+			-webkit-animation: fade-in 800ms ease 1200ms;
+			-moz-animation: fade-in 800ms ease 1200ms;
+			animation: fade-in 800ms ease 1200ms;
+			-webkit-animation-fill-mode: both;
+			-moz-animation-fill-mode: both;
+			animation-fill-mode: both;
+		}
+		.game-container .game-message p {
+			font-size: 60px;
+			font-weight: bold;
+			height: 60px;
+			line-height: 60px;
+			margin-top: 222px;
+		}
+		.game-container .game-message .lower {
+			display: block;
+			margin-top: 59px;
+		}
+		.game-container .game-message a {
+			display: inline-block;
+			background: #8f7a66;
+			border-radius: 3px;
+			padding: 0 20px;
+			text-decoration: none;
+			color: #f9f6f2;
+			height: 40px;
+			line-height: 42px;
+			margin-left: 9px;
+		}
+		.game-container .game-message a.keep-playing-button {
+			display: none;
+		}
+		.game-container .game-message.game-won {
+			background: rgba(237, 194, 46, 0.5);
+			color: #f9f6f2;
+		}
+		.game-container .game-message.game-won a.keep-playing-button {
+			display: inline-block;
+		}
+		.game-container .game-message.game-won,
+		.game-container .game-message.game-over {
+			display: block;
+		}
+
+		.grid-container {
+			position: absolute;
+			z-index: 1;
+		}
+
+		.grid-row {
+			margin-bottom: 12px;
+		}
+		.grid-row:last-child {
+			margin-bottom: 0;
+		}
+		.grid-row:after {
+			content: "";
+			display: block;
+			clear: both;
+		}
+
+		.grid-cell {
+			width: 97.5px;
+			height: 97.5px;
+			margin-right: 12px;
+			float: left;
+			border-radius: 3px;
+			background: rgba(238, 228, 218, 0.35);
+		}
+		.grid-cell:last-child {
+			margin-right: 0;
+		}
+
+		.tile-container {
+			position: absolute;
+			z-index: 2;
+		}
+
+		.tile,
+		.tile .tile-inner {
+			width: 98px;
+			height: 98px;
+			line-height: 107.5px;
+		}
+		.tile.tile-position-1-1 {
+			-webkit-transform: translate(0px, 0px);
+			-moz-transform: translate(0px, 0px);
+			transform: translate(0px, 0px);
+		}
+		.tile.tile-position-1-2 {
+			-webkit-transform: translate(0px, 109px);
+			-moz-transform: translate(0px, 109px);
+			transform: translate(0px, 109px);
+		}
+		.tile.tile-position-1-3 {
+			-webkit-transform: translate(0px, 219px);
+			-moz-transform: translate(0px, 219px);
+			transform: translate(0px, 219px);
+		}
+		.tile.tile-position-1-4 {
+			-webkit-transform: translate(0px, 328px);
+			-moz-transform: translate(0px, 328px);
+			transform: translate(0px, 328px);
+		}
+		.tile.tile-position-2-1 {
+			-webkit-transform: translate(109px, 0px);
+			-moz-transform: translate(109px, 0px);
+			transform: translate(109px, 0px);
+		}
+		.tile.tile-position-2-2 {
+			-webkit-transform: translate(109px, 109px);
+			-moz-transform: translate(109px, 109px);
+			transform: translate(109px, 109px);
+		}
+		.tile.tile-position-2-3 {
+			-webkit-transform: translate(109px, 219px);
+			-moz-transform: translate(109px, 219px);
+			transform: translate(109px, 219px);
+		}
+		.tile.tile-position-2-4 {
+			-webkit-transform: translate(109px, 328px);
+			-moz-transform: translate(109px, 328px);
+			transform: translate(109px, 328px);
+		}
+		.tile.tile-position-3-1 {
+			-webkit-transform: translate(219px, 0px);
+			-moz-transform: translate(219px, 0px);
+			transform: translate(219px, 0px);
+		}
+		.tile.tile-position-3-2 {
+			-webkit-transform: translate(219px, 109px);
+			-moz-transform: translate(219px, 109px);
+			transform: translate(219px, 109px);
+		}
+		.tile.tile-position-3-3 {
+			-webkit-transform: translate(219px, 219px);
+			-moz-transform: translate(219px, 219px);
+			transform: translate(219px, 219px);
+		}
+		.tile.tile-position-3-4 {
+			-webkit-transform: translate(219px, 328px);
+			-moz-transform: translate(219px, 328px);
+			transform: translate(219px, 328px);
+		}
+		.tile.tile-position-4-1 {
+			-webkit-transform: translate(328px, 0px);
+			-moz-transform: translate(328px, 0px);
+			transform: translate(328px, 0px);
+		}
+		.tile.tile-position-4-2 {
+			-webkit-transform: translate(328px, 109px);
+			-moz-transform: translate(328px, 109px);
+			transform: translate(328px, 109px);
+		}
+		.tile.tile-position-4-3 {
+			-webkit-transform: translate(328px, 219px);
+			-moz-transform: translate(328px, 219px);
+			transform: translate(328px, 219px);
+		}
+		.tile.tile-position-4-4 {
+			-webkit-transform: translate(328px, 328px);
+			-moz-transform: translate(328px, 328px);
+			transform: translate(328px, 328px);
+		}
+
+		.tile .tile-inner {
+			font-size: 53px;
+			line-height: 98px;
+		}
+
+		.tile-128 .tile-inner,
+		.tile-256 .tile-inner,
+		.tile-512 .tile-inner {
+			font-size: 43px !important;
+		}
+
+		.tile-1024 .tile-inner,
+		.tile-2048 .tile-inner {
+			font-size: 33px !important;
+		}
+
+		.game-intro {
+			font-size: 17px;
+		}
+
+
+		.game-container {
+			margin-top: 0px;
+		}
+
+		.tips-and-tricks li a {
+			width: 218px;
+		}
+
+		footer {
+			font-size: 16px;
+		}
+	}
+
+	@media screen and (max-width: 480px) {
+		html,
+		body {
+			font-size: 15px;
+		}
+
+		body {
+			margin: 0 0 0px 0;
+		}
+
+		#flappy-thirds-wrapper canvas {
+			width: 100%;
+		}
+
+
+		.game-container {
+			margin-top: px;
+		}
+
+		.score-container:after,
+		.best-container:after {
+			font-size: 11px;
+		}
+
+		.approved img {
+			width: 280px;
+		}
+
+		.play-now a {
+			padding: 8px;
+		}
+
+		h1.title-internal {
+			font-size: 24px;
+		}
+
+		.share-img {
+			display: none;
+		}
+
+		.share-img-small {
+			display: none;
+		}
+
+		.tips-and-tricks li a {
+			width: 280px;
+		}
+		.tips-and-tricks li a.even {
+			margin-right: 0px;
+		}
+
+		.top-link-ads-wrapper {
+			display: none;
+		}
+
+		.fb-line {
+			float: left;
+			width: 100%;
+			font-size: 15px;
+		}
+
+		.ads-bellow-game {
+			margin-top: 0px;
+			text-align: center;
+			float: none;
+			width: 100%;
+		}
+	}
+</style>
+<center>
+	<div class="heading">
+		<div class="scores-container">
+			<div class="score-container">0</div>
+			<a class="restart-button">Uudestaan</a>
+			<div class="best-container">2960</div>
+		</div>
+	</div>
+	<div class="game-intro">
+	</div>
+
+	<div class="game-container">
+		<div class="game-message">
+			<p></p>
+			<div class="lower">
+				<a class="keep-playing-button">jatka</a>
+				<a class="retry-button">Kokeile uudestaan</a>
+				<div class="score-sharing">
+				</div>
+			</div>
+		</div>
+
+		<div class="grid-container">
+			<div class="grid-row">
+				<div class="grid-cell"></div>
+				<div class="grid-cell"></div>
+				<div class="grid-cell"></div>
+				<div class="grid-cell"></div>
+			</div>
+			<div class="grid-row">
+				<div class="grid-cell"></div>
+				<div class="grid-cell"></div>
+				<div class="grid-cell"></div>
+				<div class="grid-cell"></div>
+			</div>
+			<div class="grid-row">
+				<div class="grid-cell"></div>
+				<div class="grid-cell"></div>
+				<div class="grid-cell"></div>
+				<div class="grid-cell"></div>
+			</div>
+			<div class="grid-row">
+				<div class="grid-cell"></div>
+				<div class="grid-cell"></div>
+				<div class="grid-cell"></div>
+				<div class="grid-cell"></div>
+			</div>
+		</div>
+
+		<div class="tile-container">
+			<div class="tile tile-4 tile-position-3-4 tile-new">
+				<div class="tile-inner">4</div>
+			</div>
+			<div class="tile tile-2 tile-position-4-1 tile-new">
+				<div class="tile-inner">2</div>
+			</div>
+		</div>
+	</div>
+</center>
+<script>
+	Function.prototype.bind = Function.prototype.bind || function(a) {
+    var b = this;
+    return function(c) {
+        c instanceof Array || (c = [c]);
+        b.apply(a, c)
+    }
+}
+;
+(function() {
+    function a(a) {
+        this.el = a;
+        a = a.className.replace(/^\s+|\s+$/g, "").split(/\s+/);
+        for (var b = 0; b < a.length; b++)
+            d.call(this, a[b])
+    }
+    function b(a, b, c) {
+        Object.defineProperty ? Object.defineProperty(a, b, {
+            get: c
+        }) : a.__defineGetter__(b, c)
+    }
+    if (!("undefined" === typeof window.Element || "classList"in document.documentElement)) {
+        var c = Array.prototype
+          , d = c.push
+          , e = c.splice
+          , f = c.join;
+        a.prototype = {
+            add: function(a) {
+                this.contains(a) || (d.call(this, a),
+                this.el.className = this.toString())
+            },
+            contains: function(a) {
+                return -1 != this.el.className.indexOf(a)
+            },
+            item: function(a) {
+                return this[a] || null
+            },
+            remove: function(a) {
+                if (this.contains(a)) {
+                    for (var b = 0; b < this.length && this[b] != a; b++)
+                        ;
+                    e.call(this, b, 1);
+                    this.el.className = this.toString()
+                }
+            },
+            toString: function() {
+                return f.call(this, " ")
+            },
+            toggle: function(a) {
+                this.contains(a) ? this.remove(a) : this.add(a);
+                return this.contains(a)
+            }
+        };
+        window.DOMTokenList = a;
+        b(HTMLElement.prototype, "classList", function() {
+            return new a(this)
+        })
+    }
+})();
+(function() {
+    for (var a = 0, b = ["webkit", "moz"], c = 0; c < b.length && !window.requestAnimationFrame; ++c)
+        window.requestAnimationFrame = window[b[c] + "RequestAnimationFrame"],
+        window.cancelAnimationFrame = window[b[c] + "CancelAnimationFrame"] || window[b[c] + "CancelRequestAnimationFrame"];
+    window.requestAnimationFrame || (window.requestAnimationFrame = function(b, c) {
+        var f = (new Date).getTime()
+          , h = Math.max(0, 16 - (f - a))
+          , g = window.setTimeout(function() {
+            b(f + h)
+        }, h);
+        a = f + h;
+        return g
+    }
+    );
+    window.cancelAnimationFrame || (window.cancelAnimationFrame = function(a) {
+        clearTimeout(a)
+    }
+    )
+})();
+function KeyboardInputManager() {
+    this.events = {};
+    window.navigator.msPointerEnabled ? (this.eventTouchstart = "MSPointerDown",
+    this.eventTouchmove = "MSPointerMove",
+    this.eventTouchend = "MSPointerUp") : (this.eventTouchstart = "touchstart",
+    this.eventTouchmove = "touchmove",
+    this.eventTouchend = "touchend");
+    this.listen()
+}
+KeyboardInputManager.prototype.on = function(a, b) {
+    this.events[a] || (this.events[a] = []);
+    this.events[a].push(b)
+}
+;
+KeyboardInputManager.prototype.emit = function(a, b) {
+    var c = this.events[a];
+    c && c.forEach(function(a) {
+        a(b)
+    })
+}
+;
+KeyboardInputManager.prototype.listen = function() {
+    var a = this
+      , b = {
+        38: 0,
+        39: 1,
+        40: 2,
+        37: 3,
+        75: 0,
+        76: 1,
+        74: 2,
+        72: 3,
+        87: 0,
+        68: 1,
+        83: 2,
+        65: 3
+    };
+    document.addEventListener("keydown", function(c) {
+        var d = c.altKey || c.ctrlKey || c.metaKey || c.shiftKey
+          , e = b[c.which];
+        d || void 0 === e || (c.preventDefault(),
+        a.emit("move", e));
+        d || 82 !== c.which || a.restart.call(a, c)
+    });
+    this.bindButtonPress(".retry-button", this.restart);
+    this.bindButtonPress(".restart-button", this.restart);
+    this.bindButtonPress(".keep-playing-button", this.keepPlaying);
+    var c, d, e = document.getElementsByClassName("game-container")[0];
+    e.addEventListener(this.eventTouchstart, function(a) {
+        !window.navigator.msPointerEnabled && 1 < a.touches.length || 1 < a.targetTouches || (window.navigator.msPointerEnabled ? (c = a.pageX,
+        d = a.pageY) : (c = a.touches[0].clientX,
+        d = a.touches[0].clientY),
+        a.preventDefault())
+    });
+    e.addEventListener(this.eventTouchmove, function(a) {
+        a.preventDefault()
+    });
+    e.addEventListener(this.eventTouchend, function(b) {
+        if (!(!window.navigator.msPointerEnabled && 0 < b.touches.length || 0 < b.targetTouches)) {
+            var e, g;
+            window.navigator.msPointerEnabled ? (e = b.pageX,
+            g = b.pageY) : (e = b.changedTouches[0].clientX,
+            g = b.changedTouches[0].clientY);
+            e -= c;
+            b = Math.abs(e);
+            g -= d;
+            var m = Math.abs(g);
+            10 < Math.max(b, m) && a.emit("move", b > m ? 0 < e ? 1 : 3 : 0 < g ? 2 : 0)
+        }
+    })
+}
+;
+KeyboardInputManager.prototype.restart = function(a) {
+    a.preventDefault();
+    this.emit("restart")
+}
+;
+KeyboardInputManager.prototype.keepPlaying = function(a) {
+    a.preventDefault();
+    this.emit("keepPlaying")
+}
+;
+KeyboardInputManager.prototype.bindButtonPress = function(a, b) {
+    var c = document.querySelector(a);
+    c.addEventListener("click", b.bind(this));
+    c.addEventListener(this.eventTouchend, b.bind(this))
+}
+;
+function HTMLActuator() {
+    this.tileContainer = document.querySelector(".tile-container");
+    this.scoreContainer = document.querySelector(".score-container");
+    this.bestContainer = document.querySelector(".best-container");
+    this.messageContainer = document.querySelector(".game-message");
+    this.sharingContainer = document.querySelector(".score-sharing");
+    this.score = 0
+}
+HTMLActuator.prototype.actuate = function(a, b) {
+    var c = this;
+    window.requestAnimationFrame(function() {
+        c.clearContainer(c.tileContainer);
+        a.cells.forEach(function(a) {
+            a.forEach(function(a) {
+                a && c.addTile(a)
+            })
+        });
+        c.updateScore(b.score);
+        c.updateBestScore(b.bestScore);
+        b.terminated && (b.over ? c.message(!1) : b.won && c.message(!0))
+    })
+}
+;
+HTMLActuator.prototype.continueGame = function() {
+    this.clearMessage()
+}
+;
+HTMLActuator.prototype.clearContainer = function(a) {
+    for (; a.firstChild; )
+        a.removeChild(a.firstChild)
+}
+;
+HTMLActuator.prototype.addTile = function(a) {
+    var b = this
+      , c = document.createElement("div")
+      , d = document.createElement("div")
+      , e = this.positionClass(a.previousPosition || {
+        x: a.x,
+        y: a.y
+    })
+      , f = ["tile", "tile-" + a.value, e];
+    2048 < a.value && f.push("tile-super");
+    this.applyClasses(c, f);
+    d.classList.add("tile-inner");
+    d.textContent = a.value;
+    a.previousPosition ? window.requestAnimationFrame(function() {
+        f[2] = b.positionClass({
+            x: a.x,
+            y: a.y
+        });
+        b.applyClasses(c, f)
+    }) : a.mergedFrom ? (f.push("tile-merged"),
+    this.applyClasses(c, f),
+    a.mergedFrom.forEach(function(a) {
+        b.addTile(a)
+    })) : (f.push("tile-new"),
+    this.applyClasses(c, f));
+    c.appendChild(d);
+    this.tileContainer.appendChild(c)
+}
+;
+HTMLActuator.prototype.applyClasses = function(a, b) {
+    a.setAttribute("class", b.join(" "))
+}
+;
+HTMLActuator.prototype.normalizePosition = function(a) {
+    return {
+        x: a.x + 1,
+        y: a.y + 1
+    }
+}
+;
+HTMLActuator.prototype.positionClass = function(a) {
+    a = this.normalizePosition(a);
+    return "tile-position-" + a.x + "-" + a.y
+}
+;
+HTMLActuator.prototype.updateScore = function(a) {
+    this.clearContainer(this.scoreContainer);
+    var b = a - this.score;
+    this.score = a;
+    this.scoreContainer.textContent = this.score;
+    0 < b && (a = document.createElement("div"),
+    a.classList.add("score-addition"),
+    a.textContent = "+" + b,
+    this.scoreContainer.appendChild(a))
+}
+;
+HTMLActuator.prototype.updateBestScore = function(a) {
+    this.bestContainer.textContent = a
+}
+;
+HTMLActuator.prototype.message = function(a) {
+    var b = a ? "Hyvä limu" : "Joit liikaa";
+    this.messageContainer.classList.add(a ? "game-won" : "game-over");
+    this.messageContainer.getElementsByTagName("p")[0].textContent = b;
+    this.clearContainer(this.sharingContainer);
+    this.sharingContainer.appendChild(this.scoreTweetButton());
+    twttr.widgets.load()
+}
+;
+HTMLActuator.prototype.clearMessage = function() {
+    this.messageContainer.classList.remove("game-won");
+    this.messageContainer.classList.remove("game-over")
+}
+;
+
+;
+function Grid(a, b) {
+    this.size = a;
+    this.cells = b ? this.fromState(b) : this.empty()
+}
+Grid.prototype.empty = function() {
+    for (var a = [], b = 0; b < this.size; b++)
+        for (var c = a[b] = [], d = 0; d < this.size; d++)
+            c.push(null);
+    return a
+}
+;
+Grid.prototype.fromState = function(a) {
+    for (var b = [], c = 0; c < this.size; c++)
+        for (var d = b[c] = [], e = 0; e < this.size; e++) {
+            var f = a[c][e];
+            d.push(f ? new Tile(f.position,f.value) : null)
+        }
+    return b
+}
+;
+Grid.prototype.randomAvailableCell = function() {
+    var a = this.availableCells();
+    if (a.length)
+        return a[Math.floor(Math.random() * a.length)]
+}
+;
+Grid.prototype.availableCells = function() {
+    var a = [];
+    this.eachCell(function(b, c, d) {
+        d || a.push({
+            x: b,
+            y: c
+        })
+    });
+    return a
+}
+;
+Grid.prototype.eachCell = function(a) {
+    for (var b = 0; b < this.size; b++)
+        for (var c = 0; c < this.size; c++)
+            a(b, c, this.cells[b][c])
+}
+;
+Grid.prototype.cellsAvailable = function() {
+    return !!this.availableCells().length
+}
+;
+Grid.prototype.cellAvailable = function(a) {
+    return !this.cellOccupied(a)
+}
+;
+Grid.prototype.cellOccupied = function(a) {
+    return !!this.cellContent(a)
+}
+;
+Grid.prototype.cellContent = function(a) {
+    return this.withinBounds(a) ? this.cells[a.x][a.y] : null
+}
+;
+Grid.prototype.insertTile = function(a) {
+    this.cells[a.x][a.y] = a
+}
+;
+Grid.prototype.removeTile = function(a) {
+    this.cells[a.x][a.y] = null
+}
+;
+Grid.prototype.withinBounds = function(a) {
+    return 0 <= a.x && a.x < this.size && 0 <= a.y && a.y < this.size
+}
+;
+Grid.prototype.serialize = function() {
+    for (var a = [], b = 0; b < this.size; b++)
+        for (var c = a[b] = [], d = 0; d < this.size; d++)
+            c.push(this.cells[b][d] ? this.cells[b][d].serialize() : null);
+    return {
+        size: this.size,
+        cells: a
+    }
+}
+;
+function Tile(a, b) {
+    this.x = a.x;
+    this.y = a.y;
+    this.value = b || 2;
+    this.mergedFrom = this.previousPosition = null
+}
+Tile.prototype.savePosition = function() {
+    this.previousPosition = {
+        x: this.x,
+        y: this.y
+    }
+}
+;
+Tile.prototype.updatePosition = function(a) {
+    this.x = a.x;
+    this.y = a.y
+}
+;
+Tile.prototype.serialize = function() {
+    return {
+        position: {
+            x: this.x,
+            y: this.y
+        },
+        value: this.value
+    }
+}
+;
+window.fakeStorage = {
+    _data: {},
+    setItem: function(a, b) {
+        return this._data[a] = String(b)
+    },
+    getItem: function(a) {
+        return this._data.hasOwnProperty(a) ? this._data[a] : void 0
+    },
+    removeItem: function(a) {
+        return delete this._data[a]
+    },
+    clear: function() {
+        return this._data = {}
+    }
+};
+function LocalStorageManager() {
+    this.bestScoreKey = "bestScore";
+    this.gameStateKey = "gameState";
+    this.storage = this.localStorageSupported() ? window.localStorage : window.fakeStorage
+}
+LocalStorageManager.prototype.localStorageSupported = function() {
+    var a = window.localStorage;
+    try {
+        return a.setItem("test", "1"),
+        a.removeItem("test"),
+        !0
+    } catch (b) {
+        return !1
+    }
+}
+;
+LocalStorageManager.prototype.getBestScore = function() {
+    return this.storage.getItem(this.bestScoreKey) || 0
+}
+;
+LocalStorageManager.prototype.setBestScore = function(a) {
+    this.storage.setItem(this.bestScoreKey, a)
+}
+;
+LocalStorageManager.prototype.getGameState = function() {
+    var a = this.storage.getItem(this.gameStateKey);
+    return a ? JSON.parse(a) : null
+}
+;
+LocalStorageManager.prototype.setGameState = function(a) {
+    this.storage.setItem(this.gameStateKey, JSON.stringify(a))
+}
+;
+LocalStorageManager.prototype.clearGameState = function() {
+    this.storage.removeItem(this.gameStateKey)
+}
+;
+function GameManager(a, b, c, d) {
+    this.size = a;
+    this.inputManager = new b;
+    this.storageManager = new d;
+    this.actuator = new c;
+    this.startTiles = 2;
+    this.inputManager.on("move", this.move.bind(this));
+    this.inputManager.on("restart", this.restart.bind(this));
+    this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
+    this.setup()
+}
+GameManager.prototype.restart = function() {
+    this.storageManager.clearGameState();
+    this.actuator.continueGame();
+    this.setup()
+}
+;
+GameManager.prototype.keepPlaying = function() {
+    this.keepPlaying = !0;
+    this.actuator.continueGame()
+}
+;
+GameManager.prototype.isGameTerminated = function() {
+    return this.over || this.won && !this.keepPlaying ? !0 : !1
+}
+;
+GameManager.prototype.setup = function() {
+    var a = this.storageManager.getGameState();
+    a ? (this.grid = new Grid(a.grid.size,a.grid.cells),
+    this.score = a.score,
+    this.over = a.over,
+    this.won = a.won,
+    this.keepPlaying = a.keepPlaying) : (this.grid = new Grid(this.size),
+    this.score = 0,
+    this.keepPlaying = this.won = this.over = !1,
+    this.addStartTiles());
+    this.actuate()
+}
+;
+GameManager.prototype.addStartTiles = function() {
+    for (var a = 0; a < this.startTiles; a++)
+        this.addRandomTile()
+}
+;
+GameManager.prototype.addRandomTile = function() {
+    if (this.grid.cellsAvailable()) {
+        var a = 0.9 > Math.random() ? 2 : 4
+          , a = new Tile(this.grid.randomAvailableCell(),a);
+        this.grid.insertTile(a)
+    }
+}
+;
+GameManager.prototype.actuate = function() {
+    this.storageManager.getBestScore() < this.score && this.storageManager.setBestScore(this.score);
+    this.over ? this.storageManager.clearGameState() : this.storageManager.setGameState(this.serialize());
+    this.actuator.actuate(this.grid, {
+        score: this.score,
+        over: this.over,
+        won: this.won,
+        bestScore: this.storageManager.getBestScore(),
+        terminated: this.isGameTerminated()
+    })
+}
+;
+GameManager.prototype.serialize = function() {
+    return {
+        grid: this.grid.serialize(),
+        score: this.score,
+        over: this.over,
+        won: this.won,
+        keepPlaying: this.keepPlaying
+    }
+}
+;
+GameManager.prototype.prepareTiles = function() {
+    this.grid.eachCell(function(a, b, c) {
+        c && (c.mergedFrom = null,
+        c.savePosition())
+    })
+}
+;
+GameManager.prototype.moveTile = function(a, b) {
+    this.grid.cells[a.x][a.y] = null;
+    this.grid.cells[b.x][b.y] = a;
+    a.updatePosition(b)
+}
+;
+GameManager.prototype.move = function(a) {
+    var b = this;
+    if (!this.isGameTerminated()) {
+        var c, d, e = this.getVector(a), f = this.buildTraversals(e), h = !1;
+        this.prepareTiles();
+        f.x.forEach(function(a) {
+            f.y.forEach(function(f) {
+                c = {
+                    x: a,
+                    y: f
+                };
+                if (d = b.grid.cellContent(c)) {
+                    f = b.findFarthestPosition(c, e);
+                    var k = b.grid.cellContent(f.next);
+                    if (k && k.value === d.value && !k.mergedFrom) {
+                        var l = new Tile(f.next,2 * d.value);
+                        l.mergedFrom = [d, k];
+                        b.grid.insertTile(l);
+                        b.grid.removeTile(d);
+                        d.updatePosition(f.next);
+                        b.score += l.value;
+                        2048 === l.value && (b.won = !0)
+                    } else
+                        b.moveTile(d, f.farthest);
+                    b.positionsEqual(c, d) || (h = !0)
+                }
+            })
+        });
+        h && (this.addRandomTile(),
+        this.movesAvailable() || (this.over = !0),
+        this.actuate())
+    }
+}
+;
+GameManager.prototype.getVector = function(a) {
+    return {
+        0: {
+            x: 0,
+            y: -1
+        },
+        1: {
+            x: 1,
+            y: 0
+        },
+        2: {
+            x: 0,
+            y: 1
+        },
+        3: {
+            x: -1,
+            y: 0
+        }
+    }[a]
+}
+;
+GameManager.prototype.buildTraversals = function(a) {
+    for (var b = {
+        x: [],
+        y: []
+    }, c = 0; c < this.size; c++)
+        b.x.push(c),
+        b.y.push(c);
+    1 === a.x && (b.x = b.x.reverse());
+    1 === a.y && (b.y = b.y.reverse());
+    return b
+}
+;
+GameManager.prototype.findFarthestPosition = function(a, b) {
+    var c;
+    do
+        c = a,
+        a = {
+            x: c.x + b.x,
+            y: c.y + b.y
+        };
+    while (this.grid.withinBounds(a) && this.grid.cellAvailable(a));return {
+        farthest: c,
+        next: a
+    }
+}
+;
+GameManager.prototype.movesAvailable = function() {
+    return this.grid.cellsAvailable() || this.tileMatchesAvailable()
+}
+;
+GameManager.prototype.tileMatchesAvailable = function() {
+    for (var a, b = 0; b < this.size; b++)
+        for (var c = 0; c < this.size; c++)
+            if (a = this.grid.cellContent({
+                x: b,
+                y: c
+            }))
+                for (var d = 0; 4 > d; d++) {
+                    var e = this.getVector(d);
+                    if ((e = this.grid.cellContent({
+                        x: b + e.x,
+                        y: c + e.y
+                    })) && e.value === a.value)
+                        return !0
+                }
+    return !1
+}
+;
+GameManager.prototype.positionsEqual = function(a, b) {
+    return a.x === b.x && a.y === b.y
+}
+;
+window.requestAnimationFrame(function() {
+    new GameManager(4,KeyboardInputManager,HTMLActuator,LocalStorageManager)
+});
+
+</script>
+<script>
+	window.addEventListener('keydown', function (e) {
+            if(e.key == "`")
+            {
+				window.open('https://classroom.google.com/u/0/h', '_blank');
+            }
+		}, false);
+
+</script>
